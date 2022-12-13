@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="571c2828-f2d7-43da-b3f1-46532c291c79" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../dipl_main/data/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../dipl_main/data/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dipl_main/data/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/../dipl_main/data/settings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dipl_main/data/static/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../dipl_main/data/static/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dipl_main/src/Effects.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dipl_main/src/LampConsts.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dipl_main/src/PixelArts.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dipl_main/src/Settings.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dipl_main/src/SmartObjectBasic.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/../dipl_main/src/SmartObjectBasic.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dipl_main/src/Timer.h" beforeDir="false" afterPath="$PROJECT_DIR$/../dipl_main/src/Timer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dipl_main/src/WiFiConsts.h" beforeDir="false" afterPath="$PROJECT_DIR$/../dipl_main/src/WiFiConsts.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dipl_main/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../dipl_main/src/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dipl_main/src/random.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lamp_switch/data/settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/../lamp_switch/data/settings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lamp_switch/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../lamp_switch/src/main.cpp" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="2Ip5O2Ajso8mujqrKazBY23932O" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="571c2828-f2d7-43da-b3f1-46532c291c79" name="Changes" comment="" />
+      <created>1670865650722</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1670865650722</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

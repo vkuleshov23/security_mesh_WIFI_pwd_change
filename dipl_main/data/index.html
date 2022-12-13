@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Демонстрация системы</title>
+
+    <link rel="stylesheet" type="text/css" href="static/normalize.css">
+    <link rel="stylesheet" type="text/css" href="static/style.css">
+</head>
+
+<body>
+    <div class="maincontent">
+        <label>systemMode</label>
+        <li class="button light_button" onclick="sendSystemMode()">
+            <a id="systemMode">center</a></li>
+        <br>
+        <br>
+        <label>Connect Home and Bathhouse</label>
+        <li class="button light_button" onclick="sendIgnoreMode()">
+            <a id="ignoreMode">on</a></li>
+        <br>
+        <br>
+        <label>change WiFi settings</label>
+        <li class="button light_button" onclick="sendWifiChange()">
+            <a>change</a></li>
+        <li><label id="ssid">default</label></li>
+        <li ><label id="password">default</label></li>
+    </div>
+    <script src="static/index.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+{
+    "mesh":{
+        "childs": [
+            {
+                "nodeId": 882456225,
+                "subs": []
+            },
+            {
+                "nodeId": 882456352,
+                "subs": [882456304]
+            }
+        ]
+    },
+
+    "scenes": [
+        {
+            "activator":"device",
+            "event": "change.password",
+            "executor":"device",
+            "target": 0
+        },
+        {
+            "activator":"buttonPig.click",
+            "event": "",
+            "executor":"lightPig",
+            "target": 882456225
+        }
+    ]
+}

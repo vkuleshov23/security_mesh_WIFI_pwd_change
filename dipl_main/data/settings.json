@@ -2,12 +2,8 @@
     "mesh":{
         "childs": [
             {
-                "nodeId": 882456225,
-                "subs": []
-            },
-            {
-                "nodeId": 882456352,
-                "subs": [882456304]
+                "nodeId": 3662020501,
+                "subs": [882456352]
             }
         ]
     },
@@ -18,12 +14,6 @@
             "event": "change.password",
             "executor":"device",
             "target": 0
-        },
-        {
-            "activator":"buttonPig.click",
-            "event": "",
-            "executor":"lightPig",
-            "target": 882456225
         }
     ]
 }

@@ -1,6 +1,6 @@
 {
     "mesh":{
-        "parent": 882456352,
+        "parent": 3662020501,
         "childs": []
     },
     "scenes": [
@@ -9,12 +9,6 @@
             "event": "change.password",
             "executor":"device",
             "target": 0
-        },
-        {
-            "activator":"button2.click",
-            "event": "",
-            "executor":"light2",
-            "target": 2439575566
         }
     ]
 }

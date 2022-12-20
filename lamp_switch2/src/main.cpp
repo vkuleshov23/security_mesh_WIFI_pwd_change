@@ -4,6 +4,7 @@
 #include "SmartObjectBasic.hpp"
 #include "FileWiFi.hpp"
 #include "WiFiConsts.h"
+#include "Consts.h"
 #include "Restarter.hpp"
 
 Scheduler userScheduler; // to control your personal task
@@ -13,7 +14,29 @@ SmartObjectBasic SO(&mesh);
 FileWiFi filewifi;
 Restarter restarter;
 
-auto button1 = SO.makeSmartActivator("button2.click");
+void led_control() {
+  if(mesh.getNodeList().size()) {
+    digitalWrite(CONNECT_PIN, LOW);
+  } else {
+    digitalWrite(CONNECT_PIN, HIGH);
+  }
+}
+
+auto led = SO.makeSmartValue("led.light",
+[](const String& event, String& value) {
+  if(value == "on") {
+    value = "off";
+  } else {
+    value = "on";
+  }
+},
+[](const String& value) {
+    if (value == "on"){
+      digitalWrite(LED_PIN, HIGH);
+    }else{
+      digitalWrite(LED_PIN, LOW);
+    }
+});
 
 auto passwordChanger = SO.makeSmartValue("device",
 [](const String& event, String& value) {
@@ -24,44 +47,33 @@ auto passwordChanger = SO.makeSmartValue("device",
     restarter.needReboot(5000);
 });
 
-int button_pin = D1;
-int leed_pin = D2;
-
 //при вызове этой переменной будут обработаны сценарии с активатором button2.click
 
 void setup() {
   Serial.begin(115200);
-  pinMode(button_pin, INPUT_PULLUP);
-  pinMode(leed_pin, OUTPUT);
-  digitalWrite(leed_pin, HIGH);
+  pinMode(CONNECT_PIN, OUTPUT);
+  pinMode(LED_PIN, OUTPUT);
   // Initialize SPIFFS
   if (!SPIFFS.begin())
   {
     Serial.println("Failed to mount SPIFFS");
+    digitalWrite(CONNECT_PIN, LOW);
   }
   else
   {
     filewifi.readMeshWiFi();
     SO.loadSettings();
+    digitalWrite(CONNECT_PIN, HIGH);
   }
 
   mesh.setDebugMsgTypes( ERROR | STARTUP | CONNECTION | DEBUG ); 
   mesh.init( mesh_ssid, mesh_password, &userScheduler, MESH_PORT );
   mesh.setContainsRoot(true);
   SO.initMesh();
+
 }
 
 auto t = millis();
-
-bool state = digitalRead(button_pin);
-
-void send() {
-  if(state != digitalRead(button_pin)){
-    state = !state;
-    button1->publish();//активируем сценарий
-    digitalWrite(leed_pin, state);
-  }
-}
 
 void loop() {
   
@@ -73,6 +85,8 @@ void loop() {
     t = millis();
     Serial.print("\n");
   }
-  send();
   restarter.update();
+  led_control();
 }
+
+

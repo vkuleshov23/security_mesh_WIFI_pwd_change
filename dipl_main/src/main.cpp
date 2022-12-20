@@ -14,6 +14,7 @@
 #include "painlessMesh.h"
 #include "Timer.h"
 #include "WiFiConsts.h"
+#include "Consts.h"
 #include "FileWiFi.hpp"
 #include "Restarter.hpp"
 #include <Adafruit_NeoPixel.h>
@@ -30,10 +31,10 @@
 
 #include "SmartObjectMain.hpp"
 
-// Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, MATRIX_PIN, NEO_RGB + NEO_KHZ800);
-// uint8_t r__ = 128;
-// uint8_t g__ = 128;
-// uint8_t b__ = 128;
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, MATRIX_PIN, NEO_RGB + NEO_KHZ800);
+uint8_t r__ = 255;
+uint8_t g__ = 0;
+uint8_t b__ = 0;
 
 // Prototype
 void newConnectionCallback(uint32_t nodeId);
@@ -56,17 +57,22 @@ bool ignoreMode = true;
 uint32_t nodeToIgnore1 = 3662020501;
 uint32_t nodeToIgnore2 = 3662027117;
 
+void strip_update();
+
+
 void setup() {
   Serial.begin(115200);
-  pinMode(D0, OUTPUT);
-  // strip.begin();
+  pinMode(D1, OUTPUT);
+  strip.begin();
+  strip_update();
 
-    // Initialize SPIFFS
-  if (!SPIFFS.begin()){ Serial.println("Failed to mount SPIFFS");}
-  else{
-      filewifi.readMeshWiFi();
-      SO.loadSettings();
-    }
+  // Initialize SPIFFS
+  if (!SPIFFS.begin()) { 
+    Serial.println("Failed to mount SPIFFS");
+  } else {
+    filewifi.readMeshWiFi();
+    SO.loadSettings();
+  }
 
   mesh.setDebugMsgTypes( ERROR | STARTUP | CONNECTION | DEBUG);
   mesh.init( mesh_ssid, mesh_password, MESH_PORT, WIFI_AP_STA, 1);
@@ -81,8 +87,6 @@ void setup() {
   Serial.println("My AP IP is " + myAPIP.toString());
   Serial.println("My MESH WIFI is " + mesh_ssid + " | " + mesh_password);
 
-
-
 //---------------------------------------------------------------------------
   //Async webserver
   server.on("/buf", HTTP_GET, [](AsyncWebServerRequest *request){
@@ -94,10 +98,11 @@ void setup() {
     SO.systemMode(request->arg("systemMode"));;
     request->send(200, "text/plain", "OK");
     if(SO.getSystemMode() == "local") {
-      // r__ = 255; g__ = 0; b__ = 0;
+      r__ = 0; g__ = 255; b__ = 0;
     } else {
-      // r__ = 0; g__ = 0; b__ = 255;
+      r__ = 0; g__ = 0; b__ = 255;
     }
+    strip_update();
   });
 
   server.on("/api/set/ignoreMode", HTTP_GET, [](AsyncWebServerRequest *request){
@@ -123,7 +128,6 @@ void setup() {
     request->send(200, "text/plain", out);
   });
 
-
   server.on("/api/set/WiFiChange", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(200, "text/plain", "OK");
     Serial.printf("RECIEVE WIFI CHANGE\n");
@@ -142,14 +146,11 @@ void setup() {
     request->send(200, "text/plain", out);
   });
 
-
   server.onNotFound([](AsyncWebServerRequest *request){
     if (!handleFileRead(request))
           request->send(404, "text/plain", "FileNotFound");
   });
-
   server.begin();
-
 }
 
 void loop() {
@@ -208,4 +209,11 @@ bool handleFileRead(AsyncWebServerRequest *request) {
     return true;
   }
   return false;
+}
+
+void strip_update() {
+  for(int i = 0; i < NUM_LEDS; i++) {
+    strip.setPixelColor(i, g__, r__, b__);
+  }
+  strip.show();
 }

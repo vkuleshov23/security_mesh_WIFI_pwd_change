@@ -134,7 +134,7 @@ void setup() {
     filewifi.writeMeshWiFi(filewifi.generatePassword());
     SO.sendUpdatePasswordToAll();
     // -- delete if not work
-    restarter.needReboot((mesh.getNodeList().size()+5)*1000);
+    restarter.needReboot((mesh.getNodeList().size()+5)*2000);
   });
 
   server.on("/api/get/WiFiChange", HTTP_GET, [](AsyncWebServerRequest *request){
@@ -144,6 +144,24 @@ void setup() {
     String out;
     serializeJson(data, out);
     request->send(200, "text/plain", out);
+  });
+
+  server.on("/api/get/nodeList", HTTP_GET, [](AsyncWebServerRequest *request){
+    // DynamicJsonDocument data(256);
+    list<uint32_t> nodes = mesh.getNodeList();
+    String nodesList = "{\"nodes\" : [";
+    auto itr = nodes.begin();
+    for(int i = 0; i < nodes.size() ;i++, itr++) {
+      nodesList += *itr;
+      if (!(i+1 == nodes.size())) {
+        nodesList += ',';
+      }
+    }
+      nodesList += "]}";
+    // data["nodes"] = nodesList;
+    // String out;
+    // serializeJson(data, out);
+    request->send(200, "text/plain", nodesList);
   });
 
   server.onNotFound([](AsyncWebServerRequest *request){

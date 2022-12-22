@@ -2,6 +2,7 @@ var systemMode = document.getElementById("systemMode");
 var ignore = document.getElementById("ignoreMode");
 var ssid = document.getElementById("ssid");
 var password = document.getElementById("password");
+let list = document.getElementById("nodeList");
 
 
 function getWifiChange() {
@@ -20,6 +21,30 @@ function getWifiChange() {
         });
 }
 getWifiChange();
+
+function getNodeList() {
+    fetch("/api/get/nodeList")
+        .then((d) => {
+            return d.json();
+        })
+        .then(function(d) {
+            while(list.hasChildNodes()){
+                list.removeChild('li');
+            }
+            let nodes = d.nodes;
+            nodes.forEach(node => {
+                let li = document.createElement("li");
+                li.innerText = node;
+                list.appendChild(li);
+            });
+            setTimeout(getNodeList, 1000);
+        })
+        .catch(function(err) {
+            console.log(err);
+            setTimeout(getNodeList, 1000);
+        });
+}
+getNodeList();
 
 function getSystemMode() {
     fetch("/api/get/systemMode")

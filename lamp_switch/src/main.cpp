@@ -28,19 +28,19 @@ auto passwordChanger = SO.makeSmartValue("device",
 },
 [](const String& value) {
     filewifi.writeMeshWiFi(value);
-    restarter.needReboot(5000);
+    restarter.needReboot(10000);
 });
 
 int button_pin = D1;
-int leed_pin = D2;
+int led_pin = D2;
 
 //при вызове этой переменной будут обработаны сценарии с активатором button1.click
 
 void setup() {
   Serial.begin(115200);
   pinMode(button_pin, INPUT_PULLUP);
-  pinMode(leed_pin, OUTPUT);
-  digitalWrite(leed_pin, HIGH);
+  pinMode(led_pin, OUTPUT);
+  digitalWrite(led_pin, HIGH);
   // Initialize SPIFFS
   if (!SPIFFS.begin())
   {
@@ -66,20 +66,18 @@ void send() {
   if(state != digitalRead(button_pin)){
     state = !state;
     button1->publish();//активируем сценарий
-    digitalWrite(leed_pin, state);
+    digitalWrite(led_pin, state);
   }
 }
 
 void loop() {
   
   mesh.update();
-  if (millis() - t > 3000){
-    Serial.print(WiFi.RSSI());
-    Serial.printf(WiFi.SSID().c_str());
-    Serial.printf("\n");
+  if (millis() - t > 15000){
     t = millis();
-    Serial.print("\n");
+    Serial.println(mesh.asNodeTree().toString());
   }
   send();
   restarter.update();
+  
 }

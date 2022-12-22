@@ -68,7 +68,7 @@ body {
   color: #03e9f4;
 }
 
-label {
+label, li, ul {
   background: #353333;
   color: #03e9f4;
 }

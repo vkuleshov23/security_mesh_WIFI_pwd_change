@@ -44,7 +44,7 @@ auto passwordChanger = SO.makeSmartValue("device",
 },
 [](const String& value) {
     filewifi.writeMeshWiFi(value);
-    restarter.needReboot(5000);
+    restarter.needReboot(10000);
 });
 
 //при вызове этой переменной будут обработаны сценарии с активатором button2.click
@@ -78,12 +78,9 @@ auto t = millis();
 void loop() {
   
   mesh.update();
-  if (millis() - t > 3000){
-    Serial.print(WiFi.RSSI());
-    Serial.printf(WiFi.SSID().c_str());
-    Serial.printf("\n");
+  if (millis() - t > 15000){
     t = millis();
-    Serial.print("\n");
+    Serial.println(mesh.asNodeTree().toString());
   }
   restarter.update();
   led_control();

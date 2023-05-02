@@ -10,7 +10,7 @@ using namespace std;
 class SendToExecutor : IMeshCommand {
 private:
     string name = "sendToExecutor";
-    vector<SmartValue> value;
+    vector<ISmartValue> value;
 public:
     string getName() {
         return name;

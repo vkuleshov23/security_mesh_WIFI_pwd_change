@@ -1,16 +1,16 @@
 #pragma once
 #include <memory>
-#include "../interfaces/ISmartValue.hpp"
+#include "../interfaces/IScenario.hpp"
 #include "../commands/VoidCommand.hpp"
 #include "../utils/MeshSmartValues.hpp"
 
 
-class MeshSmartValuesSettings {
+class MeshScenarioSettings {
 protected:
     MeshSmartValues values;
 public:
-    MeshSmartValuesSettings() {
-        values.addCommand(std::make_shared<ISmartValue>(VoidCommand()));
+    MeshScenarioSettings() {
+        values.addCommand(std::make_shared<IScenario>(VoidCommand()));
     }
     MeshSmartValues getCommands() {
         return values;

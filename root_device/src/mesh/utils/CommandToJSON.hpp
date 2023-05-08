@@ -1,0 +1,24 @@
+#pragma once
+#include "../interfaces/IMeshCommand.hpp"
+#include <string>
+#include <AsyncJson.h>
+
+using namespace std;
+
+class CommandToJSON {
+protected:
+
+public:
+    CommandToJSON() {}
+    static inline String getJSON(IMeshCommand* command) {
+        DynamicJsonDocument doc(512);
+        String res;
+        doc["name"] = command->get_name();
+        doc["target"] = command->get_target();
+        doc["transmitter"] = command->get_transmitter();
+        doc["data"] = command->get_data();
+        serializeJson(doc, res);
+        return res;
+        
+    }
+};

@@ -33,4 +33,5 @@ public:
 
     uint32_t get_target() {return this->target;}
 
+     ~IMeshCommand() {}
 };

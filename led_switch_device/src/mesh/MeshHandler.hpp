@@ -19,13 +19,13 @@ protected:
     CommandsQueueAttendant commands;
 
     void publish() {
-        IMeshCommand* command = this->commands.serve();
+        shared_ptr<IMeshCommand> command = this->commands.serve();
         if(command != NULL) {
             this->publish(command);
         }
     }
 
-    void publish(IMeshCommand* command) {
+    void publish(shared_ptr<IMeshCommand> command) {
         command->set_transmitter(this->mesh->getNodeId());
         String json = CommandToJSON::getJSON(command);
         this->mesh->sendSingle(command->get_target(), json);       
@@ -37,10 +37,14 @@ public:
     }
 
     function<void(const uint32_t &, const String &)> receivedCallback = [this](const uint32_t &from, const String &msg ){
-        IMeshCommand* command = JSONToCommand::getCommand(msg);
-        IMeshActivator* activator = activators.getActivator(command);
-        activator->processCommand(command);
-        activator->answer(commands.getQueue());
+        shared_ptr<IMeshCommand> command = JSONToCommand::getCommand(msg);
+        shared_ptr<IMeshActivator> activator = activators.getActivator(command);
+        if(activator != NULL) {
+            activator->processCommand(command);
+            activator->answer(commands.getQueue());
+        } else {
+            Serial.println("NO SUCH ACTIVATOR EXIST");
+        }
     };
 
     void setup() {
@@ -52,7 +56,7 @@ public:
         this->publish();
     }
 
-    void send(IMeshCommand* command) {
+    void send(shared_ptr<IMeshCommand> command) {
         CommandsQueue* queue = this->commands.getQueue();
         queue->addCommand(command);
     }

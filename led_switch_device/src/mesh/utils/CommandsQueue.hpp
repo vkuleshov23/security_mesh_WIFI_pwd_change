@@ -7,10 +7,10 @@ using namespace std;
 
 class CommandsQueue {
 protected:
-    queue<IMeshCommand*>* commands = NULL;
+    queue<shared_ptr<IMeshCommand>>* commands = NULL;
 public:
-    CommandsQueue(queue<IMeshCommand*>* commands): commands(commands){}
-    void addCommand(IMeshCommand* command) {
+    CommandsQueue(queue<shared_ptr<IMeshCommand>>* commands): commands(commands){}
+    void addCommand(shared_ptr<IMeshCommand> command) {
         this->commands->push(command);
     }
 };

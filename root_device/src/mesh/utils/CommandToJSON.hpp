@@ -10,7 +10,7 @@ protected:
 
 public:
     CommandToJSON() {}
-    static inline String getJSON(IMeshCommand* command) {
+    static inline String getJSON(shared_ptr<IMeshCommand> command) {
         DynamicJsonDocument doc(512);
         String res;
         doc["name"] = command->get_name();

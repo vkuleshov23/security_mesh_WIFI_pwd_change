@@ -14,7 +14,7 @@ public:
     SerialPrintActivator() 
     : IMeshActivator(PRINT) {}
 
-    void process(IMeshCommand* command) override {
+    void process(shared_ptr<IMeshCommand> command) override {
         // this->setParam(command->get_data());
         Serial.println(command->get_data().c_str());
     }

@@ -48,4 +48,8 @@ public:
     MeshServer *getMesh_server(){return this->mesh_server;}
 
     void setMesh_server(MeshServer *mesh_server){this->mesh_server = mesh_server;}
+    
+    ~MainSecMesh() {
+        delete mesh_server;
+    }
 };

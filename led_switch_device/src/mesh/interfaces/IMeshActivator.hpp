@@ -10,13 +10,13 @@ using namespace std;
 
 class IMeshActivator {
 private:
-    list<IMeshCommand*> commandsToSend;
+    list<shared_ptr<IMeshCommand>> commandsToSend;
 protected:
     string command_name;
     string param;
 
-    virtual void process(IMeshCommand* command) {}
-    const void addToAnswer(IMeshCommand* command) {
+    virtual void process(shared_ptr<IMeshCommand> command) {}
+    const void addToAnswer(shared_ptr<IMeshCommand> command) {
         this->commandsToSend.push_back(command);
     }
 
@@ -34,7 +34,7 @@ public:
     }
 
     const void answer(CommandsQueue* queue) {
-        std::list<IMeshCommand*>::iterator i = commandsToSend.begin();
+        std::list<shared_ptr<IMeshCommand>>::iterator i = commandsToSend.begin();
         while(i != commandsToSend.end()) {
             queue->addCommand(*i);
             i = commandsToSend.erase(i);
@@ -45,7 +45,7 @@ public:
         this->param = param;
     }
 
-    void processCommand(IMeshCommand* command){
+    void processCommand(shared_ptr<IMeshCommand> command){
         process(command);
     }
 

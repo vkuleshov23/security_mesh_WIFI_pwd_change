@@ -14,7 +14,7 @@ public:
     PingAnswerActivator() 
     : IMeshActivator(PING_ANSWER) {}
 
-    void process(IMeshCommand* command) override {
+    void process(shared_ptr<IMeshCommand> command) override {
         Serial.print("ping delay: ");
         Serial.print(millis() - std::stol(command->get_data()));
         Serial.print(" | from: ");

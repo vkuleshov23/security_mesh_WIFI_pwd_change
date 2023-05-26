@@ -7,20 +7,25 @@ using namespace std;
 
 class CommandsQueueAttendant {
 protected:
-    queue<IMeshCommand*>* commands = new queue<IMeshCommand*>;
-    CommandsQueue* c_queue = new CommandsQueue(this->commands);; 
+    queue<shared_ptr<IMeshCommand>>* commands = new queue<shared_ptr<IMeshCommand>>;
+    CommandsQueue* c_queue = new CommandsQueue(this->commands); 
 public:
     CommandsQueue* getQueue() {
         return this->c_queue;
     }
     
-    IMeshCommand* serve() {
+    shared_ptr<IMeshCommand> serve() {
         if (!this->commands->empty()) {
-            IMeshCommand* command = this->commands->front();
+            shared_ptr<IMeshCommand> command = this->commands->front();
             this->commands->pop();
             return command;
         } else {
             return NULL;
         }
+    }
+    
+    ~CommandsQueueAttendant() {
+        delete commands;
+        delete c_queue;
     }
 };

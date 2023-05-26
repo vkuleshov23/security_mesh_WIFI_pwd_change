@@ -9,28 +9,29 @@
 
 class IMeshActivators {
 protected:
-    std::map<std::string, IMeshActivator*> activators;
-    void setActivator(IMeshActivator* activator) {
+    std::map<std::string, shared_ptr<IMeshActivator>> activators;
+    void setActivator(shared_ptr<IMeshActivator> activator) {
         this->activators[activator->getName()] = activator;
     }
 
 private:
-    void basic_setup() {}
+    void basic_setup() {
+        this->setActivator(shared_ptr<IMeshActivator>(new PingActivator()));
+        this->setActivator(shared_ptr<IMeshActivator>(new PingAnswerActivator()));
+    }
 
 public:
     IMeshActivators() { this->basic_setup(); }
 
     void setup() {
-        this->setActivator(new SerialPrintActivator());
-        this->setActivator(new PingActivator());
-        this->setActivator(new PingAnswerActivator());
+        this->setActivator(shared_ptr<IMeshActivator>(new SerialPrintActivator()));
     }
 
-    IMeshActivator* getActivator(IMeshCommand* command) {
+    shared_ptr<IMeshActivator> getActivator(shared_ptr<IMeshCommand> command) {
         return this->getActivator(command->get_name());
     }
 
-    IMeshActivator* getActivator(std::string command_name) {
+    shared_ptr<IMeshActivator> getActivator(std::string command_name) {
         if(activators.find(command_name) != activators.end()) {
             return activators[command_name];
         } else {

@@ -49,6 +49,10 @@ public:
         this->mesh_handler->update();
     };
 
+    void send(shared_ptr<IMeshCommand> command) {
+        this->mesh_handler->send(command);
+    }
+
     Restarter getRestarter(){return this->restarter;}
 
     void setRestarter(Restarter restarter){this->restarter = restarter;}
@@ -56,4 +60,8 @@ public:
     MeshHandler *getMesh_handler(){return this->mesh_handler;}
 
     void setMesh_handler(MeshHandler *mesh_handler){this->mesh_handler = mesh_handler;}
+
+    ~SecMesh() {
+        delete mesh_handler;
+    }
 };

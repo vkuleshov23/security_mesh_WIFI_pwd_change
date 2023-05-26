@@ -37,15 +37,16 @@ public:
         this->mesh->init(mesh_ssid, mesh_password, MESH_PORT, WIFI_AP_STA, 1);
         this->mesh->stationManual(STATION_SSID, STATION_PASSWORD);
         this->mesh->setHostname(HOSTNAME);
-        // this->mesh->setRoot(true);
-        // this->mesh->setRoot(false);
         this->mesh->setContainsRoot(false);
         this->mesh_handler->setup();
         this->mesh_server->setup();
-
     }
 
     MeshServer *getMesh_server(){return this->mesh_server;}
 
     void setMesh_server(MeshServer *mesh_server){this->mesh_server = mesh_server;}
+    
+    ~MainSecMesh() {
+        delete mesh_server;
+    }
 };

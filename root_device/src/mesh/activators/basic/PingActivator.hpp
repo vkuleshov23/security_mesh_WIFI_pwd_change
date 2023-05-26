@@ -14,10 +14,11 @@ public:
     PingActivator() 
     : IMeshActivator(PING) {}
 
-    void process(IMeshCommand* command) override {
+    void process(shared_ptr<IMeshCommand> command) override {
         Serial.print(command->get_name().c_str());
         Serial.print(" from: ");
         Serial.println(command->get_transmitter());
-        this->addToAnswer(new PingAnswerCommand(command->get_transmitter(), std::stol(command->get_data())));
+        this->addToAnswer(shared_ptr<IMeshCommand>(
+            new PingAnswerCommand(command->get_transmitter(), std::stol(command->get_data()))));
     }
 };

@@ -64,7 +64,7 @@ public:
         return _timer;
     }
 
-    bool operator==(unsigned long v){
+    bool operator==(unsigned long v) {
         return this->time() == v;
     }
 

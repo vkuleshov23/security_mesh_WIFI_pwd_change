@@ -5,16 +5,15 @@
 #include "../../commands/basic/PingAnswerCommand.hpp"
 #include <string>
 #include <Arduino.h>
+#include <memory>
 
-using namespace std;
 
 class PingActivator : public IMeshActivator {
 protected:
 public:
-    PingActivator() 
-    : IMeshActivator(PING) {}
+    PingActivator() : IMeshActivator(PING) {}
 
-    void process(shared_ptr<IMeshCommand> command) override {
+    void process(std::shared_ptr<IMeshCommand> command) override {
         Serial.print(command->get_name().c_str());
         Serial.print(" from: ");
         Serial.println(command->get_transmitter());

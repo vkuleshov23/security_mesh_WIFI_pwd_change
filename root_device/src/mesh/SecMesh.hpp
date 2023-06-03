@@ -19,16 +19,25 @@
 class SecMesh {
 private:
     Scheduler scheduler;
+
+    function<void(const uint32_t &)> newConnectionCallback = [this](const uint32_t &from){
+        if(from == MAIN_DEVICE) {
+            this->mesh_handler->send(shared_ptr<IMeshCommand>(new AuthStep0Command(from)));
+        }
+    };
+
 protected:
-    painlessMesh *mesh;
+    painlessMesh mesh;
     WiFiConfigurer wifi_conf;
     Restarter restarter;
     MeshHandler *mesh_handler;
+    RSAAdatper rsa;
+    ECCAdatper ecc;
+    AuthHandler authHandler;
 
 public:
-    SecMesh(painlessMesh* mesh) {
-        this->mesh = mesh;
-        this->mesh_handler = new MeshHandler(mesh);
+    SecMesh() {
+        this->mesh_handler = new MeshHandler(&mesh, &rsa, &ecc, &authHandler);
     }
 
     void setup() {
@@ -38,15 +47,19 @@ public:
             Serial.println("LittleFS was mounted!");
             wifi_conf.readMeshWiFi();
         }
-        this->mesh->setDebugMsgTypes(ERROR | STARTUP | CONNECTION | DEBUG);
-        this->mesh->init(mesh_ssid, mesh_password, &scheduler, MESH_PORT);
-        this->mesh->setContainsRoot(false);
+        this->mesh.setDebugMsgTypes(ERROR | STARTUP | CONNECTION | DEBUG);
+        this->mesh.init(mesh_ssid, mesh_password, &scheduler, MESH_PORT);
+        this->mesh.setContainsRoot(false);
+        this->mesh.onNewConnection(this->newConnectionCallback);
+        ecc.setup();
         this->mesh_handler->setup();
+        newConnectionCallback(MAIN_DEVICE);
     }
 
     void update() {
-        this->mesh->update();
+        this->mesh.update();
         this->mesh_handler->update();
+        this->authHandler.update();
     };
 
     void send(shared_ptr<IMeshCommand> command) {
@@ -56,10 +69,6 @@ public:
     Restarter getRestarter(){return this->restarter;}
 
     void setRestarter(Restarter restarter){this->restarter = restarter;}
-
-    MeshHandler *getMesh_handler(){return this->mesh_handler;}
-
-    void setMesh_handler(MeshHandler *mesh_handler){this->mesh_handler = mesh_handler;}
 
     ~SecMesh() {
         delete mesh_handler;

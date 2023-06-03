@@ -1,5 +1,14 @@
 #pragma once
 
-#define PING "ping"
-#define PING_ANSWER "ping_answer"
-#define PRINT "print"
+#define PING "PING"
+#define PING_ANSWER "PING_ANSWER"
+#define PRINT "PRINT"
+#define AUTH_CREDENTIAL "AUTH_CREDENTIAL"
+#define RSA_KEY "RSA_KEY"
+#define AUTH_STEP_0 "AUTH_STEP_0"
+#define AUTH_STEP_1 "AUTH_STEP_1"
+#define AUTH_STEP_2 "AUTH_STEP_2"
+#define AUTH_STEP_3 "AUTH_STEP_3"
+#define AUTH_STEP_4 "AUTH_STEP_4"
+#define AUTH_STEP_5 "AUTH_STEP_5"
+#define AUTH_ERROR "AUTH_ERROR"

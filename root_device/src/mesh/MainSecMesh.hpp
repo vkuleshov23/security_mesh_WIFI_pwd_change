@@ -21,8 +21,8 @@ class MainSecMesh : public SecMesh {
 protected:
     MeshServer *mesh_server;
 public:
-    MainSecMesh(painlessMesh* mesh, AsyncWebServer* server) : SecMesh(mesh) {
-        this->mesh_server = new MeshServer(this->mesh, server, &this->wifi_conf, &this->restarter);
+    MainSecMesh(AsyncWebServer* server) : SecMesh() {
+        this->mesh_server = new MeshServer(&this->mesh, server, &this->wifi_conf, &this->restarter);
 
     }
 
@@ -33,22 +33,15 @@ public:
             Serial.println("LittleFS was mounted!");
             wifi_conf.readMeshWiFi();
         }
-        this->mesh->setDebugMsgTypes(ERROR | STARTUP | CONNECTION | DEBUG);
-        this->mesh->init(mesh_ssid, mesh_password, MESH_PORT, WIFI_AP_STA, 1);
-        this->mesh->stationManual(STATION_SSID, STATION_PASSWORD);
-        this->mesh->setHostname(HOSTNAME);
-        // this->mesh->setRoot(true);
-        // this->mesh->setRoot(false);
-        this->mesh->setContainsRoot(false);
+        this->mesh.setDebugMsgTypes(ERROR | STARTUP | CONNECTION | DEBUG);
+        this->mesh.init(mesh_ssid, mesh_password, MESH_PORT, WIFI_AP_STA, 1);
+        this->mesh.stationManual(STATION_SSID, STATION_PASSWORD);
+        this->mesh.setHostname(HOSTNAME);
+        this->mesh.setContainsRoot(false);
         this->mesh_handler->setup();
         this->mesh_server->setup();
-
     }
 
-    MeshServer *getMesh_server(){return this->mesh_server;}
-
-    void setMesh_server(MeshServer *mesh_server){this->mesh_server = mesh_server;}
-    
     ~MainSecMesh() {
         delete mesh_server;
     }

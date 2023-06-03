@@ -14,6 +14,9 @@ public:
     IMeshCommand(string name, uint32_t target, string data) 
     : name(name), target(target), data(data) {}
 
+    IMeshCommand(string name, uint32_t target, String data) 
+    : name(name), target(target), data(string(data.c_str())) {}
+
     IMeshCommand(string name, uint32_t transmitter, uint32_t target, string data) 
     : name(name), transmitter(transmitter), target(target), data(data) {}
 

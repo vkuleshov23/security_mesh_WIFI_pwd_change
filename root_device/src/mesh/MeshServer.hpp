@@ -64,6 +64,7 @@ protected:
             devices.remove(devices.length()-1);
             request->send(200, "text/plain", devices);
         });
+        
     }
     
     void request_get_wifi_credentials() {

@@ -1,5 +1,6 @@
 #pragma once
 #include <Arduino.h>
+#include <set>
 #include <ESPAsyncWebServer.h>
 #include "painlessMesh.h"
 #include "settings/WiFiConfigurer.hpp"
@@ -21,11 +22,12 @@ class MainSecMesh : public SecMesh {
 protected:
     MeshServer *mesh_server;
 public:
+
     MainSecMesh(AsyncWebServer* server) : SecMesh() {
-        this->mesh_server = new MeshServer(&this->mesh, server, &this->wifi_conf, &this->restarter);
+        this->mesh_server = new MeshServer(&this->mesh, server, &this->wifi_conf, &this->restarter, &this->authHandler);
 
     }
-
+    
     void setup() {
         if(!SPIFFS.begin()) {
             Serial.println("Failed to mount LittleFS! WiFi settings not read");
@@ -40,7 +42,7 @@ public:
         this->mesh.setContainsRoot(false);
         this->mesh_handler->setup();
         this->mesh_server->setup();
-        Serial.printf("MY NODE ID -> %lu\n", this->mesh.getNodeId());
+        Serial.printf("MY NODE ID -> %zu\n", this->mesh.getNodeId());
     }
 
     ~MainSecMesh() {

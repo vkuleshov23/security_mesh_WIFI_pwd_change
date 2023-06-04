@@ -6,15 +6,12 @@
 #include "mesh/security/RSAAdapter.hpp"
 #include <Hash.h>
 
-
 SecMesh sec_mesh;
 Timer t;
+
 void setup() {
     Serial.begin(115200);
     delay(1000);
-    Serial.println();
-    Serial.println();
-    Serial.println();
     sec_mesh.setup();
 }
 

@@ -4,21 +4,24 @@
 #include "painlessMesh.h"
 #include "settings/WiFiConfigurer.hpp"
 #include "utils/Restarter.hpp"
+#include "mesh/security/auth/AuthHandler.hpp"
 
 class MeshServer {
 public:
 
-    MeshServer(painlessMesh* mesh, AsyncWebServer* server, WiFiConfigurer* wifi_conf, Restarter* restarter) {
+    MeshServer(painlessMesh* mesh, AsyncWebServer* server, WiFiConfigurer* wifi_conf, Restarter* restarter, AuthHandler* auth) {
         this->mesh = mesh;
         this->server = server;
         this->wifi_conf = wifi_conf;
         this->restarter = restarter;
+        this->auth = auth;
     }
 
     void setup() {
         this->request_connected_devices();
         this->request_change_wifi_pwd();
         this->request_get_wifi_credentials();
+        this->request_authenticated_list();
         this->request_get_node_list();
         this->request_with_no_found();
         this->server->begin();
@@ -30,6 +33,7 @@ protected:
     painlessMesh* mesh;
     WiFiConfigurer* wifi_conf;
     Restarter* restarter;
+    AuthHandler* auth;
 
     void request_connected_devices() {
         this->server->on("/connected_devices", HTTP_GET, [this](AsyncWebServerRequest *request){
@@ -46,6 +50,19 @@ protected:
             //-- delete if not work
             // this->restarter->needReboot((this->mesh->getNodeList().size()+5)*2000);
             Serial.println("END");
+        });
+    }
+
+    void request_authenticated_list() {
+        this->server->on("/auth_list", HTTP_GET, [this](AsyncWebServerRequest *request){
+            Serial.println("RECIEVE WIFI CHANGE");
+            String devices;
+            for(uint32_t device : this->auth->get_auth_devices()) {
+                devices += device;
+                devices += ",";
+            }
+            devices.remove(devices.length()-1);
+            request->send(200, "text/plain", devices);
         });
     }
     

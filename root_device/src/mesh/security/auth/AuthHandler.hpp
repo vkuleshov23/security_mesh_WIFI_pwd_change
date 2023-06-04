@@ -65,6 +65,10 @@ protected:
 
 public:
 
+    std::set<uint32_t> get_auth_devices() {
+        return this->authBase;
+    }
+
     boolean check(uint32_t target, std::string data, uint8_t repeat) {
         std::string key_with_gamma = this->addGammaThenHash(target, repeat);
         if(key_with_gamma == data) {

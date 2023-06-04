@@ -1,6 +1,7 @@
 #pragma once
 #include "painlessMesh.h"
 #include <vector>
+#include <set>
 #include <map>
 #include <functional>
 #include <string>

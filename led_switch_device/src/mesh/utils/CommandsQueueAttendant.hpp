@@ -21,6 +21,7 @@ public:
             Serial.print(command->get_name().c_str());
             Serial.print(" -> ");
             Serial.println(command->get_target());
+            Serial.println(command->get_data().c_str());
             return command;
         } else {
             return NULL;

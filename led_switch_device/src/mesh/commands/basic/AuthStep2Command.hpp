@@ -10,7 +10,7 @@ using namespace std;
 
 class AuthStep2Command : public IMeshCommand {
 protected:
-    std::string chypherPublicData(uint32_t target, std::string public_data, RSAAdatper* rsa) {
+    std::string encryptRsaAndPublicData(uint32_t target, std::string public_data, RSAAdatper* rsa) {
         std::string packet = 
             rsa->encrypt_for_target(rsa->get_public_key(), target) + "|" + rsa->encrypt_for_target(public_data, target); 
         return packet;
@@ -18,5 +18,5 @@ protected:
 
 public:
     AuthStep2Command(uint32_t target, std::string public_data, RSAAdatper* rsa)
-    : IMeshCommand(AUTH_STEP_2, target, chypherPublicData(target, public_data, rsa)) {}
+    : IMeshCommand(AUTH_STEP_2, target, encryptRsaAndPublicData(target, public_data, rsa)) {}
 };

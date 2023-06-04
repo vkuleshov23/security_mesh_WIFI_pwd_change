@@ -40,6 +40,7 @@ public:
         this->mesh.setContainsRoot(false);
         this->mesh_handler->setup();
         this->mesh_server->setup();
+        Serial.printf("MY NODE ID -> %lu\n", this->mesh.getNodeId());
     }
 
     ~MainSecMesh() {

@@ -17,15 +17,17 @@ protected:
 
     void set_rsa(uint32_t target, std::string encrypted_public_key) {
         std::string public_key = this->rsa->decrypt(encrypted_public_key);
+        Serial.println(public_key.c_str());
         this->rsa->set_target_pub_key(target, public_key);
         yield();
     }
 
     std::string set_data_and_start_auth(uint32_t target, std::string encrypted_public_data) {
         std::string public_data = this->rsa->decrypt(encrypted_public_data);
+        Serial.println(public_data.c_str());
         this->auth->startAuth(target, public_data);
         yield();
-        return this->auth->addGamma(target);
+        return this->auth->addGammaThenHash(target);
     }
 
 public:

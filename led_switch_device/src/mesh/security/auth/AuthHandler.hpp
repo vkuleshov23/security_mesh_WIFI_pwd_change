@@ -7,6 +7,7 @@
 #include "painlessMesh.h"
 #include "utils/Timer.h"
 #include "utils/Generator.hpp"
+#include "mesh/security/SHA1.hpp"
 
 class AuthHandler {
 protected:
@@ -20,7 +21,7 @@ protected:
         StaticJsonDocument<1024> auth_data;
         std::string res;
         DeserializationError error = deserializeJson(auth_data, file);
-        if(error) {Serial.println(error.f_str()); return "";} 
+        if(error) {Serial.println("error: "); Serial.println(error.f_str()); return "";} 
         for (JsonObject key_item : auth_data["keys"].as<JsonArray>()) {
             if(key_item["target"] == target) {
                 res = (std::string)key_item["password"];
@@ -61,6 +62,17 @@ protected:
         return with_gamma;
     }
 
+    std::string addGamma(uint32_t target, std::string key, std::string current_data) {
+        std::string with_gamma = "";
+        int key_len = key.length();
+        if(key_len != 0 && current_data.length() != key_len) {
+            for(int i = 0; i < key_len; i++) {
+                with_gamma.push_back(key.at(i) + current_data.at(i));
+            }
+        }
+        return with_gamma;
+    }
+
     void update_timer(uint32_t target) {
         this->authTimers[target] = millis();
     }
@@ -68,7 +80,7 @@ protected:
 public:
 
     boolean check(uint32_t target, std::string data, uint8_t repeat) {
-        std::string key_with_gamma = this->addGamma(target, repeat);
+        std::string key_with_gamma = this->addGammaThenHash(target, repeat);
         if(key_with_gamma == data) {
             this->update_timer(target);
             return true;
@@ -86,7 +98,7 @@ public:
     }
 
     std::string genKeyAndStartAuth(uint32_t target) {
-        std::string key = generatePassword(AUTH_KEY_LEN);
+        std::string key = generatePassword(AUTH_KEY_LEN, millis());
         authKeys[target] = key;
         authTimers[target] = millis();
         return key;
@@ -112,16 +124,17 @@ public:
         authTimers.erase(target);
     }
 
-    std::string addGamma(uint32_t target) {
-        return this->addGamma(target, this->getKey(target));
+    std::string addGammaThenHash(uint32_t target) {
+        return SHA1::hash(this->addGamma(target, this->getKey(target)));
     }
 
-    std::string addGamma(uint32_t target, uint8_t repeat) {
+    std::string addGammaThenHash(uint32_t target, uint8_t repeat) {
         std::string key = this->getKey(target);
+        std::string res = authKeys[target];
         for(int i = 0; i < repeat; i++) {
-            key = addGamma(target, key);
+            res = addGamma(target, key, res);
         }
-        return key;
+        return SHA1::hash(res);
     }
 
     void update() {

@@ -10,11 +10,25 @@ protected:
         bool generate = rsa_generate_keys(public_key, private_key);
         while (!generate) {
             generate = rsa_generate_keys(public_key, private_key);
+            yield();
         }
     }
     uint8_t tmp_pub_key[RSA_SIZE];
     uint8_t public_key[RSA_SIZE];
     uint8_t private_key[RSA_SIZE];
+
+    void clear_buffer(char* buffer, int len) {
+        for(int i = 0; i < len; i++) {
+            buffer[i] = 0;
+        }
+    }
+
+    string fill(string res, char* buffer, int len) {
+        for(int i = 0; i < len; i++) {
+            res.push_back(buffer[i]);
+        }
+        return res;
+    }
 
     string pad_data(string data, uint8_t len) {
         uint8_t p = data.length()%len;
@@ -60,7 +74,7 @@ public:
         string res;
         char c_buffer[RSA_SIZE];
         for(int i = 0; i < msg.length(); i+= RSA_BLOCK_SIZE) {
-            string buffer = msg.substr(i, i+RSA_BLOCK_SIZE).c_str();
+            string buffer = msg.substr(i, RSA_BLOCK_SIZE);
             this->encrypt((char*)buffer.c_str(), c_buffer, pub_key);
             res += HexConverter::toHex(c_buffer, sizeof(c_buffer));
         }
@@ -70,7 +84,7 @@ public:
     string encrypt_for_target(string msg, uint32_t target) {
         string key = get_target_pub_key(target);
         if (!key.empty()) {
-            return encrypt(msg, key.c_str());
+            return encrypt(msg, key);
         } else {
             return " ";
         }
@@ -86,16 +100,18 @@ public:
     }
 
     string decrypt(string msg) {
-        msg = HexConverter::hexToCharArr(msg);
-        Serial.println(msg.length());
+        // msg = HexConverter::hexToCharArr(msg);
         string res;
-        char c_buffer[RSA_BLOCK_SIZE];
-        for(int i = 0; i < msg.length(); i+= RSA_SIZE) {
-            string buffer = msg.substr(i, i+RSA_SIZE).c_str();
-            this->decrypt((char*)buffer.c_str(), c_buffer);
-            res += c_buffer;
+        char c_buffer[RSA_SIZE];
+        for(size_t  i = 0; i < msg.length(); i+=(RSA_SIZE*2)) {
+            // string buffer = msg.substr(i, i+(RSA_SIZE*2));
+            HexConverter::hexToCharArr(msg.substr(i, (RSA_SIZE*2)).c_str(), c_buffer);
+            this->decrypt(c_buffer, c_buffer);
+            res = fill(res, c_buffer, RSA_BLOCK_SIZE);
+            yield();
         }
-        return trimString(res);;
+        res = trimString(res);
+        return res;
     }
 
     void encrypt(char* msg) {

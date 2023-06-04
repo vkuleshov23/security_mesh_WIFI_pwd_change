@@ -11,7 +11,7 @@ protected:
 public:
     CommandToJSON() {}
     static inline String getJSON(shared_ptr<IMeshCommand> command) {
-        DynamicJsonDocument doc(512);
+        DynamicJsonDocument doc(2048);
         String res;
         doc["name"] = command->get_name();
         doc["target"] = command->get_target();

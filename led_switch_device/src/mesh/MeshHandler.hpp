@@ -54,18 +54,10 @@ public:
         } else {
             Serial.println("NO SUCH ACTIVATOR EXIST");
         }
-    };
-
-    function<void(const uint32_t &)> newConnectionCallback = [this](const uint32_t &from){
-        if(from == MAIN_DEVICE) {
-            CommandsQueue* queue = this->commands.getQueue();
-            queue->addCommand(shared_ptr<IMeshCommand>(new AuthStep0Command(from)));
-        }
-    };
+    };    
 
     void setup() {
         this->mesh->onReceive(this->receivedCallback);
-        this->mesh->onNewConnection(this->newConnectionCallback);
     }
 
     void update() {

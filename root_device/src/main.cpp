@@ -3,9 +3,8 @@
 #include "painlessMesh.h"
 #include "mesh/MainSecMesh.hpp"
 
-painlessMesh mesh;
 AsyncWebServer server(80);
-MainSecMesh main_sec_mesh(&mesh, &server);
+MainSecMesh main_sec_mesh(&server);
 
 void setup() {
     Serial.begin(115200);

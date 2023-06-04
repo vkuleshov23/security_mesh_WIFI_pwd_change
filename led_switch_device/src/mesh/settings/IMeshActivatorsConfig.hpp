@@ -7,12 +7,15 @@
 #include "mesh/activators/basic/PingActivator.hpp"
 #include "mesh/activators/basic/PingAnswerActivator.hpp"
 #include "mesh/activators/basic/RSAKeyActivator.hpp"
+#include "mesh/activators/basic/RSAKeyAnswerActivator.hpp"
 #include "mesh/activators/basic/AuthErrorActivator.hpp"
 #include "mesh/activators/basic/AuthStep0Activator.hpp"
 #include "mesh/activators/basic/AuthStep1Activator.hpp"
 #include "mesh/activators/basic/AuthStep2Activator.hpp"
 #include "mesh/activators/basic/AuthStep4Activator.hpp"
 #include "mesh/activators/basic/AuthStep3Activator.hpp"
+#include "mesh/activators/test/RSASerialActivator.hpp"
+#include "mesh/activators/test/RSASerialAnswerActivator.hpp"
 #include "mesh/security/ECCAdapter.hpp"
 #include "mesh/security/RSAAdapter.hpp"
 #include "mesh/security/auth/AuthHandler.hpp"
@@ -33,12 +36,15 @@ private:
         this->setActivator(shared_ptr<IMeshActivator>(new PingActivator()));
         this->setActivator(shared_ptr<IMeshActivator>(new PingAnswerActivator()));
         this->setActivator(shared_ptr<IMeshActivator>(new RSAKeyActivator(rsa)));
+        this->setActivator(shared_ptr<IMeshActivator>(new RSAKeyAnswerActivator(rsa)));
         this->setActivator(shared_ptr<IMeshActivator>(new AuthStep0Activator(rsa)));
         this->setActivator(shared_ptr<IMeshActivator>(new AuthStep1Activator(rsa, auth)));
         this->setActivator(shared_ptr<IMeshActivator>(new AuthStep2Activator(rsa, auth)));
         this->setActivator(shared_ptr<IMeshActivator>(new AuthStep3Activator(rsa, auth)));
         this->setActivator(shared_ptr<IMeshActivator>(new AuthStep4Activator(rsa, auth)));
         this->setActivator(shared_ptr<IMeshActivator>(new AuthErrorActivator(auth)));
+        this->setActivator(shared_ptr<IMeshActivator>(new RSASeraialActivator(rsa)));
+        this->setActivator(shared_ptr<IMeshActivator>(new RSASerialAnswerActivator(rsa)));
     }
 
 public:
@@ -59,7 +65,7 @@ public:
             return activators[command_name];
         } else {
             Serial.print(command_name.c_str());
-            Serial.println(" nor found");
+            Serial.println(" not found");
             return NULL;
         }
     }

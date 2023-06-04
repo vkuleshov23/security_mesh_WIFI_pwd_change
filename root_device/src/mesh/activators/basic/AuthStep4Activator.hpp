@@ -17,7 +17,7 @@ protected:
 
     void authenticate(uint32_t target, std::string hash_key_with_2_gamma) {
         if(this->auth->check_and_try_auth(target, hash_key_with_2_gamma, 2)) {
-            Serial.printf("AUTHENTICATED: %lu ", target);
+            Serial.printf("AUTHENTICATED: %zu \n", target);
         } else {
             this->addToAnswer(shared_ptr<IMeshCommand>(
                 new AuthErrorCommand(target)));

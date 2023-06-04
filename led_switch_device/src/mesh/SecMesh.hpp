@@ -3,6 +3,8 @@
 #include <ESPAsyncWebServer.h>
 #include "painlessMesh.h"
 #include "settings/WiFiConfigurer.hpp"
+#include "mesh/commands/test/RSASerialCommand.hpp"
+#include "mesh/commands/basic/RSAKeyCommand.hpp"
 #include "utils/Restarter.hpp"
 #include "MeshServer.hpp"
 #include "MeshHandler.hpp"
@@ -22,7 +24,8 @@ private:
 
     function<void(const uint32_t &)> newConnectionCallback = [this](const uint32_t &from){
         if(from == MAIN_DEVICE) {
-            this->mesh_handler->send(shared_ptr<IMeshCommand>(new AuthStep0Command(from)));
+            this->send(shared_ptr<IMeshCommand>(new AuthStep0Command(from)));
+            // this->send(shared_ptr<IMeshCommand>(new RSAKeyCommand(from, &this->rsa)));
         }
     };
 
@@ -54,6 +57,7 @@ public:
         ecc.setup();
         this->mesh_handler->setup();
         newConnectionCallback(MAIN_DEVICE);
+        Serial.printf("MY NODE ID -> %zu\n", this->mesh.getNodeId());
     }
 
     void update() {
@@ -64,6 +68,11 @@ public:
 
     void send(shared_ptr<IMeshCommand> command) {
         this->mesh_handler->send(command);
+    }
+
+    void send_encrypt(const char* com_name, uint32_t target, string data) {
+        this->send(shared_ptr<IMeshCommand>(
+            new IMeshCommand(com_name, target, this->rsa.encrypt_for_target(data, target))));
     }
 
     Restarter getRestarter(){return this->restarter;}

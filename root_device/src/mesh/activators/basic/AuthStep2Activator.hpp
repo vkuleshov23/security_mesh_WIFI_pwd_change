@@ -27,7 +27,7 @@ protected:
         Serial.println(public_data.c_str());
         this->auth->startAuth(target, public_data);
         yield();
-        return this->auth->addGammaThenHash(target);
+        return this->auth->addGammaThenHash(target, 1);
     }
 
 public:

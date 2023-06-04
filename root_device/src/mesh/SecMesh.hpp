@@ -24,8 +24,8 @@ private:
 
     function<void(const uint32_t &)> newConnectionCallback = [this](const uint32_t &from){
         if(from == MAIN_DEVICE) {
-            // this->send(shared_ptr<IMeshCommand>(new AuthStep0Command(from)));
-            this->send(shared_ptr<IMeshCommand>(new RSAKeyCommand(from, &this->rsa)));
+            this->send(shared_ptr<IMeshCommand>(new AuthStep0Command(from)));
+            // this->send(shared_ptr<IMeshCommand>(new RSAKeyCommand(from, &this->rsa)));
         }
     };
 
@@ -72,7 +72,7 @@ public:
 
     void send_encrypt(const char* com_name, uint32_t target, string data) {
         this->send(shared_ptr<IMeshCommand>(
-            new IMeshCommand(com_name, target, this->rsa.encrypt_for_target(data + ".", target))));
+            new IMeshCommand(com_name, target, this->rsa.encrypt_for_target(data, target))));
     }
 
     Restarter getRestarter(){return this->restarter;}

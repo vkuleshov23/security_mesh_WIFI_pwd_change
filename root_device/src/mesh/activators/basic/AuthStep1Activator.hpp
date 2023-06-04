@@ -24,8 +24,6 @@ public:
         uint32_t target = command->get_transmitter();
         this->rsa->set_target_pub_key(target, command->get_data());
         std::string key = this->auth->genKeyAndStartAuth(target);
-        Serial.print("DATA: ");
-        Serial.println(key.c_str());
         this->addToAnswer(shared_ptr<IMeshCommand>(
             new AuthStep2Command(target, key, this->rsa)));
     }

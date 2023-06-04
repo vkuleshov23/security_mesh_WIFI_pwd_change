@@ -50,27 +50,13 @@ protected:
         }
     }
 
-    std::string addGamma(uint32_t target, std::string key) {
-        std::string public_data = this->authKeys[target];
-        std::string with_gamma = "";
+    void addGamma(uint32_t target, std::string key, char* current_data) {
         int key_len = key.length();
-        if(key_len != 0 && public_data.length() != key_len) {
+        if(key_len != 0) {
             for(int i = 0; i < key_len; i++) {
-                with_gamma.push_back(key.at(i) + public_data.at(i));
+                current_data[i] = key.at(i) + current_data[i];
             }
         }
-        return with_gamma;
-    }
-
-    std::string addGamma(uint32_t target, std::string key, std::string current_data) {
-        std::string with_gamma = "";
-        int key_len = key.length();
-        if(key_len != 0 && current_data.length() != key_len) {
-            for(int i = 0; i < key_len; i++) {
-                with_gamma.push_back(key.at(i) + current_data.at(i));
-            }
-        }
-        return with_gamma;
     }
 
     void update_timer(uint32_t target) {
@@ -111,8 +97,6 @@ public:
     bool auth(uint32_t target) {
         if(!isTimeOut(target)) {
             this->authBase.insert(target);
-            authKeys.erase(target);
-            authTimers.erase(target);
             return true;
         }
         return false;
@@ -124,17 +108,14 @@ public:
         authTimers.erase(target);
     }
 
-    std::string addGammaThenHash(uint32_t target) {
-        return SHA1::hash(this->addGamma(target, this->getKey(target)));
-    }
-
     std::string addGammaThenHash(uint32_t target, uint8_t repeat) {
         std::string key = this->getKey(target);
-        std::string res = authKeys[target];
+        std::string aKey = authKeys[target];
+        char* res = (char*)aKey.c_str();
         for(int i = 0; i < repeat; i++) {
-            res = addGamma(target, key, res);
+            addGamma(target, key, res);
         }
-        return SHA1::hash(res);
+        return std::string(sha1(res, aKey.length()).c_str());
     }
 
     void update() {

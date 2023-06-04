@@ -21,7 +21,7 @@ void setup() {
 void loop() {
     sec_mesh.update();
     if(t == 0) {
-        sec_mesh.send(shared_ptr<IMeshCommand>(new PingCommand(MAIN_DEVICE)));
+        // sec_mesh.send(shared_ptr<IMeshCommand>(new PingCommand(MAIN_DEVICE)));
         sec_mesh.send_encrypt(RSA_PRINT, MAIN_DEVICE, "KEK RSA PRINT");
         t.start(10000);
     }

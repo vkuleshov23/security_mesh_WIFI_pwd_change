@@ -100,11 +100,9 @@ public:
     }
 
     string decrypt(string msg) {
-        // msg = HexConverter::hexToCharArr(msg);
         string res;
         char c_buffer[RSA_SIZE];
         for(size_t  i = 0; i < msg.length(); i+=(RSA_SIZE*2)) {
-            // string buffer = msg.substr(i, i+(RSA_SIZE*2));
             HexConverter::hexToCharArr(msg.substr(i, (RSA_SIZE*2)).c_str(), c_buffer);
             this->decrypt(c_buffer, c_buffer);
             res = fill(res, c_buffer, RSA_BLOCK_SIZE);

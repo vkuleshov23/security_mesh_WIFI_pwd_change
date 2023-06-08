@@ -2,6 +2,7 @@
 #include <LittleFS.h>
 #include "painlessMesh.h"
 #include "mesh/MainSecMesh.hpp"
+#include "mesh/security/auth/ModularExp.hpp"
 
 AsyncWebServer server(80);
 MainSecMesh main_sec_mesh(&server);

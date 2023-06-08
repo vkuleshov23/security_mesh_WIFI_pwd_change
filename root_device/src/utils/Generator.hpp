@@ -1,5 +1,5 @@
-#include <functional>
 #include <string>
+#include <Arduino.h>
 
 std::string generatePassword(){
     char ch[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
@@ -22,4 +22,9 @@ std::string generatePassword(uint8_t length, unsigned long seed){
         psw += ch[rand()%sizeof(ch)];
     }
     return psw;
+}
+
+uint16_t generateUintPassword(unsigned long seed){
+    srand(seed);
+    return (uint16_t)rand();
 }

@@ -3,32 +3,33 @@
 #include <map>
 #include <list>
 #include <set>
+#include <utility>
 #include <Arduino.h>
 #include "painlessMesh.h"
 #include "utils/Timer.h"
 #include "utils/Generator.hpp"
 #include "mesh/security/SHA1.hpp"
+#include "mesh/security/auth/ModularExp.hpp"
 
 class AuthHandler {
 protected:
     std::set<uint32_t> authBase;
-    std::map<uint32_t, std::string> authKeys;
+    std::map<uint32_t, uint16_t> authKeys;
     std::map<uint32_t, unsigned long> authTimers;
     Timer timeOutChecker;
 
-    std::string getKey(uint32_t target) {
+    void getKey(uint32_t target, std::pair<uint16_t, uint16_t>* p) {
         File file = SPIFFS.open("/auth_data.json", "r");
         StaticJsonDocument<1024> auth_data;
         std::string res;
         DeserializationError error = deserializeJson(auth_data, file);
-        if(error) {Serial.println("error: "); Serial.println(error.f_str()); return "";} 
+        if(error) {Serial.println("error: "); Serial.println(error.f_str());} 
         for (JsonObject key_item : auth_data["keys"].as<JsonArray>()) {
             if(key_item["target"] == target) {
-                res = (std::string)key_item["password"];
+                *p = std::make_pair((uint16_t)key_item["degree"], (uint16_t)key_item["module"]);
                 break;
             }
         }
-        return res;
     }
 
     bool isTimeOut(uint32_t target) {
@@ -47,15 +48,6 @@ protected:
             authKeys.erase(target);
             authTimers.erase(target);
             targets_for_delete.pop_front();
-        }
-    }
-
-    void addGamma(uint32_t target, std::string key, char* current_data) {
-        int key_len = key.length();
-        if(key_len != 0) {
-            for(int i = 0; i < key_len; i++) {
-                current_data[i] = key.at(i) + current_data[i];
-            }
         }
     }
 
@@ -83,15 +75,15 @@ public:
     }
 
     void startAuth(uint32_t target, std::string key) {
-        authKeys[target] = key;
+        authKeys[target] = (uint16_t)std::stol(key);
         authTimers[target] = millis();
     }
 
     std::string genKeyAndStartAuth(uint32_t target) {
-        std::string key = generatePassword(AUTH_KEY_LEN, millis());
+        uint16_t key = generateUintPassword(millis());
         authKeys[target] = key;
         authTimers[target] = millis();
-        return key;
+        return std::to_string(key);
     }
 
     bool isAuth(uint32_t target) {
@@ -113,13 +105,14 @@ public:
     }
 
     std::string addGammaThenHash(uint32_t target, uint8_t repeat) {
-        std::string key = this->getKey(target);
-        std::string aKey = authKeys[target];
-        char* res = (char*)aKey.c_str();
+        std::pair<uint16_t, uint16_t> p;
+        this->getKey(target, &p);
+        uint32_t aKey = authKeys[target];
         for(int i = 0; i < repeat; i++) {
-            addGamma(target, key, res);
+            aKey = ModularExp::mod_exp(aKey, p.first, p.second);
         }
-        return std::string(sha1(res, aKey.length()).c_str());
+        const char* c_res = std::to_string(aKey).c_str();
+        return std::string(sha1(c_res, sizeof(c_res)).c_str());
     }
 
     void update() {

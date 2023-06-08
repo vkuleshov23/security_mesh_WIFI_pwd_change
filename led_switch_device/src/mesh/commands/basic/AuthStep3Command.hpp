@@ -14,5 +14,6 @@ protected:
 
 public:
     AuthStep3Command(uint32_t target, std::string credential, RSAAdatper* rsa)
-    : IMeshCommand(AUTH_STEP_3, target, rsa->encrypt_for_target(credential, target)) {}
+    : IMeshCommand(AUTH_STEP_3, target, credential) {}
+    // : IMeshCommand(AUTH_STEP_3, target, rsa->encrypt_for_target(credential, target)) {}
 };

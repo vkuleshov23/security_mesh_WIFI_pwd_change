@@ -25,7 +25,7 @@ protected:
     RSAAdatper* rsa;
     ECCAdatper* ecc;
     AuthHandler* auth;
-    
+
     std::map<std::string, shared_ptr<IMeshActivator>> activators;
     void setActivator(shared_ptr<IMeshActivator> activator) {
         this->activators[activator->getName()] = activator;

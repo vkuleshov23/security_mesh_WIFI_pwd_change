@@ -36,7 +36,8 @@ public:
 
     void process(std::shared_ptr<IMeshCommand> command) override {
         uint32_t target = command->get_transmitter();
-        std::string hash_key_with_gamma = this->rsa->decrypt(command->get_data());
-        this->authenticate(target, hash_key_with_gamma);
+        // std::string hash_key_with_gamma = this->rsa->decrypt(command->get_data());
+        // this->authenticate(target, hash_key_with_gamma);
+        this->authenticate(target, command->get_data());
     }
 };

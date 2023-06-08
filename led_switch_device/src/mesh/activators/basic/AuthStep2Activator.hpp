@@ -23,9 +23,10 @@ protected:
     }
 
     std::string set_data_and_start_auth(uint32_t target, std::string encrypted_public_data) {
-        std::string public_data = this->rsa->decrypt(encrypted_public_data);
-        Serial.println(public_data.c_str());
-        this->auth->startAuth(target, public_data);
+        // std::string public_data = this->rsa->decrypt(encrypted_public_data);
+        // Serial.println(public_data.c_str());
+        // this->auth->startAuth(target, public_data);
+        this->auth->startAuth(target, encrypted_public_data);
         yield();
         return this->auth->addGammaThenHash(target, 1);
     }

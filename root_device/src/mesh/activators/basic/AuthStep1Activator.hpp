@@ -12,19 +12,16 @@
 
 class AuthStep1Activator : public IMeshActivator {
 protected:
-    RSAAdatper* rsa;
     AuthHandler* auth;
 public:
-    AuthStep1Activator(RSAAdatper* rsa, AuthHandler* auth) : IMeshActivator(AUTH_STEP_1) {
-        this->rsa = rsa;
+    AuthStep1Activator(AuthHandler* auth) : IMeshActivator(AUTH_STEP_1) {
         this->auth = auth;
     }
 
     void process(std::shared_ptr<IMeshCommand> command) override {
         uint32_t target = command->get_transmitter();
-        this->rsa->set_target_pub_key(target, command->get_data());
-        std::string key = this->auth->genKeyAndStartAuth(target);
+        this->auth->startAuth(target, command->get_data());
         this->addToAnswer(shared_ptr<IMeshCommand>(
-            new AuthStep2Command(target, key, this->rsa)));
+            new AuthStep2Command(target, this->auth->addGammaThenHash(target, 1))));
     }
 };

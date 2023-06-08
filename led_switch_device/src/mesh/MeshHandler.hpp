@@ -11,7 +11,7 @@
 #include "settings/IMeshActivatorsConfig.hpp"
 #include "utils/CommandsQueueAttendant.hpp"
 #include "security/auth/AuthHandler.hpp"
-#include "mesh/commands/basic/AuthStep0Command.hpp"
+#include "mesh/commands/basic/AuthInitCommand.hpp"
 
 using namespace std;
 

@@ -10,14 +10,14 @@
 
 class AuthStep0Activator : public IMeshActivator {
 protected:
-    RSAAdatper* rsa;
+    AuthHandler* auth;
 public:
-    AuthStep0Activator(RSAAdatper* rsa) : IMeshActivator(AUTH_STEP_0) {
-        this->rsa = rsa;
+    AuthStep0Activator(AuthHandler* auth) : IMeshActivator(AUTH_STEP_0) {
+        this->auth = auth;
     }
 
     void process(std::shared_ptr<IMeshCommand> command) override {
         this->addToAnswer(shared_ptr<IMeshCommand>(
-            new AuthStep1Command(command->get_transmitter(), this->rsa)));
+            new AuthStep1Command(command->get_transmitter(), auth->genKeyAndStartAuth(command->get_transmitter()))));
     }
 };

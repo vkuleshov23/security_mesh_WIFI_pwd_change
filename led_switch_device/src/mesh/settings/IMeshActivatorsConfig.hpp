@@ -9,11 +9,13 @@
 #include "mesh/activators/basic/RSAKeyActivator.hpp"
 #include "mesh/activators/basic/RSAKeyAnswerActivator.hpp"
 #include "mesh/activators/basic/AuthErrorActivator.hpp"
+#include "mesh/activators/basic/AuthInitActivator.hpp"
 #include "mesh/activators/basic/AuthStep0Activator.hpp"
 #include "mesh/activators/basic/AuthStep1Activator.hpp"
 #include "mesh/activators/basic/AuthStep2Activator.hpp"
-#include "mesh/activators/basic/AuthStep4Activator.hpp"
 #include "mesh/activators/basic/AuthStep3Activator.hpp"
+#include "mesh/activators/basic/AuthStep4Activator.hpp"
+#include "mesh/activators/basic/AuthStep5Activator.hpp"
 #include "mesh/activators/test/RSASerialActivator.hpp"
 #include "mesh/activators/test/RSASerialAnswerActivator.hpp"
 #include "mesh/security/ECCAdapter.hpp"
@@ -37,11 +39,13 @@ private:
         this->setActivator(shared_ptr<IMeshActivator>(new PingAnswerActivator()));
         this->setActivator(shared_ptr<IMeshActivator>(new RSAKeyActivator(rsa)));
         this->setActivator(shared_ptr<IMeshActivator>(new RSAKeyAnswerActivator(rsa)));
-        this->setActivator(shared_ptr<IMeshActivator>(new AuthStep0Activator(rsa)));
-        this->setActivator(shared_ptr<IMeshActivator>(new AuthStep1Activator(rsa, auth)));
-        this->setActivator(shared_ptr<IMeshActivator>(new AuthStep2Activator(rsa, auth)));
+        this->setActivator(shared_ptr<IMeshActivator>(new AuthInitActivator()));
+        this->setActivator(shared_ptr<IMeshActivator>(new AuthStep0Activator(auth)));
+        this->setActivator(shared_ptr<IMeshActivator>(new AuthStep1Activator(auth)));
+        this->setActivator(shared_ptr<IMeshActivator>(new AuthStep2Activator(auth)));
         this->setActivator(shared_ptr<IMeshActivator>(new AuthStep3Activator(rsa, auth)));
-        this->setActivator(shared_ptr<IMeshActivator>(new AuthStep4Activator(rsa, auth)));
+        this->setActivator(shared_ptr<IMeshActivator>(new AuthStep4Activator(rsa)));
+        this->setActivator(shared_ptr<IMeshActivator>(new AuthStep5Activator(rsa)));
         this->setActivator(shared_ptr<IMeshActivator>(new AuthErrorActivator(auth)));
         this->setActivator(shared_ptr<IMeshActivator>(new RSASeraialActivator(rsa)));
         this->setActivator(shared_ptr<IMeshActivator>(new RSASerialAnswerActivator(rsa)));

@@ -18,10 +18,10 @@ public:
         if (!this->commands->empty()) {
             shared_ptr<IMeshCommand> command = this->commands->front();
             this->commands->pop();
-            Serial.print(command->get_name().c_str());
-            Serial.print(" -> ");
-            Serial.println(command->get_target());
-            Serial.println(command->get_data().c_str());
+            // Serial.print(command->get_name().c_str());
+            // Serial.print(" -> ");
+            // Serial.println(command->get_target());
+            // Serial.println(command->get_data().c_str());
             return command;
         } else {
             return NULL;

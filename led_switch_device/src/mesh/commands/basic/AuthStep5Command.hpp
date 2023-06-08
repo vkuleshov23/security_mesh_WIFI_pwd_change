@@ -9,10 +9,11 @@
 
 using namespace std;
 
-class AuthStep1Command : public IMeshCommand {
+class AuthStep5Command : public IMeshCommand {
 protected:
 
 public:
-    AuthStep1Command(uint32_t target, std::string credentials)
-    : IMeshCommand(AUTH_STEP_1, target, credentials) {}
+    AuthStep5Command(uint32_t target, RSAAdatper* rsa)
+    : IMeshCommand(AUTH_STEP_5, target, 
+        rsa->encrypt_for_target(rsa->get_public_key(), target)) {}
 };

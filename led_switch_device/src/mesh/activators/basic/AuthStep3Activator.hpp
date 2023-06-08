@@ -16,15 +16,11 @@ protected:
     AuthHandler* auth;
 
     void authenticate(uint32_t target, std::string hash_key_with_gamma) {
-        if(this->auth->check_and_try_auth(target, hash_key_with_gamma, 1)) {
+        if(this->auth->check_and_try_auth(target, hash_key_with_gamma, 2)) {
             Serial.printf("AUTHENTICATED: %zu \n", target);
-            std::string hash = this->auth->addGammaThenHash(target, 2);
-            Serial.println(hash.c_str());
-            this->addToAnswer(shared_ptr<IMeshCommand>(
-                new AuthStep4Command(target, hash, this->rsa)));
+            this->addToAnswer(shared_ptr<IMeshCommand>(new AuthStep4Command(target, this->rsa)));
         } else {
-            this->addToAnswer(shared_ptr<IMeshCommand>(
-                new AuthErrorCommand(target)));
+            this->addToAnswer(shared_ptr<IMeshCommand>(new AuthErrorCommand(target)));
         }
     }
 
@@ -36,8 +32,6 @@ public:
 
     void process(std::shared_ptr<IMeshCommand> command) override {
         uint32_t target = command->get_transmitter();
-        // std::string hash_key_with_gamma = this->rsa->decrypt(command->get_data());
-        // this->authenticate(target, hash_key_with_gamma);
         this->authenticate(target, command->get_data());
     }
 };

@@ -6,10 +6,9 @@
 
 using namespace std;
 
-class AuthStep1Command : public IMeshCommand {
+class AuthInitCommand : public IMeshCommand {
 protected:
-
 public:
-    AuthStep1Command(uint32_t target, std::string credentials)
-    : IMeshCommand(AUTH_STEP_1, target, credentials) {}
+    AuthInitCommand(uint32_t target)
+    : IMeshCommand(AUTH_INIT, target, string(AUTH_INIT)) {}
 };

@@ -11,7 +11,8 @@
 #include "settings/IMeshActivatorsConfig.hpp"
 #include "utils/CommandsQueueAttendant.hpp"
 #include "security/auth/AuthHandler.hpp"
-#include "mesh/commands/basic/AuthStep0Command.hpp"
+#include "mesh/commands/basic/AuthInitCommand.hpp"
+#include "utils/Timer.h"
 
 using namespace std;
 
@@ -23,6 +24,24 @@ protected:
     RSAAdatper* rsa;
     ECCAdatper* ecc;
     AuthHandler* auth;
+    Timer auth_connect_provocator;
+
+    void chech_auth() {
+        if(auth_connect_provocator == 0) {
+            auth_connect_provocator.start(AUTH_CHECK);
+            bool isConnected = mesh->isConnected(MAIN_DEVICE);
+            bool isAuth = auth->isAuth(MAIN_DEVICE);
+            if(!isConnected) {
+                if(isAuth) {
+                    auth->disable(MAIN_DEVICE);
+                }
+            } else {
+                if(!isAuth) {
+                    this->send(shared_ptr<IMeshCommand>(new AuthInitCommand(MAIN_DEVICE)));
+                }
+            }
+        }
+    }
 
     void publish() {
         shared_ptr<IMeshCommand> command = this->commands.serve();
@@ -63,6 +82,7 @@ public:
 
     void update() {
         this->publish();
+        this->chech_auth();
     }
 
     void send(shared_ptr<IMeshCommand> command) {

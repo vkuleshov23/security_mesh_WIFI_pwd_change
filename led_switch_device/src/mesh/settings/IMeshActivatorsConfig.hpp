@@ -42,7 +42,7 @@ private:
         this->setActivator(shared_ptr<IMeshActivator>(new AuthInitActivator()));
         this->setActivator(shared_ptr<IMeshActivator>(new AuthStep0Activator(auth)));
         this->setActivator(shared_ptr<IMeshActivator>(new AuthStep1Activator(auth)));
-        this->setActivator(shared_ptr<IMeshActivator>(new AuthStep2Activator(auth)));
+        this->setActivator(shared_ptr<IMeshActivator>(new AuthStep2Activator(auth, rsa)));
         this->setActivator(shared_ptr<IMeshActivator>(new AuthStep3Activator(rsa, auth)));
         this->setActivator(shared_ptr<IMeshActivator>(new AuthStep4Activator(rsa)));
         this->setActivator(shared_ptr<IMeshActivator>(new AuthStep5Activator(rsa)));

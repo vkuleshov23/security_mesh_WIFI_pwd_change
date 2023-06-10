@@ -1,9 +1,6 @@
 #pragma once
 #include "mesh/interfaces/IMeshCommand.hpp"
 #include "mesh/settings/CommandNames.hpp"
-#include "mesh/security/ECCAdapter.hpp"
-#include "mesh/security/RSAAdapter.hpp"
-#include "mesh/security/SHA1.hpp"
 #include <string>
 #include <Arduino.h>
 

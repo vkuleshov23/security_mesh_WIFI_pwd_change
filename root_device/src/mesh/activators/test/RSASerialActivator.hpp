@@ -18,9 +18,10 @@ public:
     }
 
     void process(std::shared_ptr<IMeshCommand> command) override {
-        string data = this->rsa->decrypt(command->get_data());
-        Serial.println(data.c_str());
+        // string data = this->rsa->decrypt(command->get_data());
+        // Serial.println(data.c_str());
+        Serial.println(command->get_data().c_str());
         this->addToAnswer(shared_ptr<IMeshCommand>(
-                new RSASerialAnswerCommand(command->get_transmitter(), data + " !", rsa)));
+                new RSASerialAnswerCommand(command->get_transmitter(), command->get_data() + " !", rsa)));
     }
 };

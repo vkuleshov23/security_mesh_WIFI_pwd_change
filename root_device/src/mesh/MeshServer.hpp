@@ -55,6 +55,7 @@ protected:
 
     void request_authenticated_list() {
         this->server->on("/auth_list", HTTP_GET, [this](AsyncWebServerRequest *request){
+            Serial.println("RECIEVE WIFI CHANGE");
             String devices;
             for(uint32_t device : this->auth->get_auth_devices()) {
                 devices += device;

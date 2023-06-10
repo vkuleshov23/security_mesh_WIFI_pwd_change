@@ -15,10 +15,24 @@ protected:
     RSAAdatper* rsa;
     AuthHandler* auth;
 
-    void authenticate(uint32_t target, std::string hash_key_with_gamma) {
-        if(this->auth->check_and_try_auth(target, hash_key_with_gamma, 2)) {
-            Serial.printf("AUTHENTICATED: %zu \n", target);
-            this->addToAnswer(shared_ptr<IMeshCommand>(new AuthStep4Command(target, this->rsa)));
+    std::string getHash(uint32_t target, std::string pub_key) {
+        std::string hash2 = this->auth->addGammaThenHash(target, 2);
+        std::string payload = hash2 + sha1(pub_key.c_str(), pub_key.length()).c_str();
+        std::string hash_payload = sha1(payload.c_str(), payload.length()).c_str();
+        // std::string hash3 = this->auth->addGammaThenHash(target, 3);
+        return hash_payload;
+    }
+
+    void authenticate(uint32_t target, std::string data) {
+        int index = data.find('|');
+        std::string key = data.substr(0, index);
+        std::string hash = data.substr(index+1);
+        if(hash == getHash(target, key)) {
+            if(this->auth->auth(target)) {
+                Serial.printf("AUTHENTICATED: %zu\n", target);
+                this->rsa->set_target_pub_key(target, key);
+                // this->addToAnswer(shared_ptr<IMeshCommand>(new AuthStep4Command(target, this->rsa)));
+            }
         } else {
             this->addToAnswer(shared_ptr<IMeshCommand>(new AuthErrorCommand(target)));
         }

@@ -6,9 +6,6 @@
 #include "mesh/interfaces/IMeshActivator.hpp"
 #include "mesh/settings/CommandNames.hpp"
 #include "mesh/security/RSAAdapter.hpp"
-#include "mesh/security/auth/AuthHandler.hpp"
-#include "mesh/commands/basic/AuthStep5Command.hpp"
-#include "mesh/commands/basic/AuthErrorCommand.hpp"
 
 class AuthStep5Activator : public IMeshActivator {
 protected:

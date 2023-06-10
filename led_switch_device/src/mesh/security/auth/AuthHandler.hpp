@@ -8,7 +8,6 @@
 #include "painlessMesh.h"
 #include "utils/Timer.h"
 #include "utils/Generator.hpp"
-#include "mesh/security/SHA1.hpp"
 #include "mesh/security/auth/ModularExp.hpp"
 
 class AuthHandler {

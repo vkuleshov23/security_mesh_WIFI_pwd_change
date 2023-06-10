@@ -10,6 +10,6 @@ class RSASerialCommand : public IMeshCommand {
 protected:
 
 public:
-    RSASerialCommand(uint32_t target, string data, RSAAdatper* rsa) 
-    : IMeshCommand(RSA_PRINT, target, rsa->encrypt_for_target(data, target)) {}
+    RSASerialCommand(uint32_t target, string data) 
+    : IMeshCommand(RSA_PRINT, target, data) {}
 };

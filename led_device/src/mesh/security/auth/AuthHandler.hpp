@@ -8,7 +8,6 @@
 #include "painlessMesh.h"
 #include "utils/Timer.h"
 #include "utils/Generator.hpp"
-#include "mesh/security/SHA1.hpp"
 #include "mesh/security/auth/ModularExp.hpp"
 
 class AuthHandler {
@@ -111,8 +110,8 @@ public:
         for(int i = 0; i < repeat; i++) {
             aKey = ModularExp::mod_exp(aKey, p.first, p.second);
         }
-        const char* c_res = std::to_string(aKey).c_str();
-        return std::string(sha1(c_res, sizeof(c_res)).c_str());
+        std::string res = std::to_string(aKey).c_str();
+        return std::string(sha1(res.c_str(), res.length()).c_str());
     }
 
     void update() {

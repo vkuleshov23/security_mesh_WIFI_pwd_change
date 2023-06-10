@@ -24,8 +24,7 @@ private:
 
     function<void(const uint32_t &)> newConnectionCallback = [this](const uint32_t &from){
         if(from == MAIN_DEVICE) {
-            this->send(shared_ptr<IMeshCommand>(new AuthStep0Command(from)));
-            // this->send(shared_ptr<IMeshCommand>(new RSAKeyCommand(from, &this->rsa)));
+            this->send(shared_ptr<IMeshCommand>(new AuthInitCommand(MAIN_DEVICE)));
         }
     };
 
@@ -56,7 +55,6 @@ public:
         this->mesh.onNewConnection(this->newConnectionCallback);
         ecc.setup();
         this->mesh_handler->setup();
-        newConnectionCallback(MAIN_DEVICE);
         Serial.printf("MY NODE ID -> %zu\n", this->mesh.getNodeId());
     }
 

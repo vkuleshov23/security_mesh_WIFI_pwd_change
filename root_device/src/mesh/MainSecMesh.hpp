@@ -10,7 +10,6 @@
 #include "SecMesh.hpp"
 
 #ifdef ESP8266
-    #include "Hash.h"
     #include "FS.h"
     #include <ESPAsyncTCP.h>
 #else

@@ -9,15 +9,16 @@
 #include "utils/Timer.h"
 #include "utils/Generator.hpp"
 #include "mesh/security/auth/ModularExp.hpp"
+#include "mesh/security/MESH_SHA256.hpp"
 
 class AuthHandler {
 protected:
     std::set<uint32_t> authBase;
-    std::map<uint32_t, uint16_t> authKeys;
+    std::map<uint32_t, uint64_t> authKeys;
     std::map<uint32_t, unsigned long> authTimers;
     Timer timeOutChecker;
 
-    void getKey(uint32_t target, std::pair<uint16_t, uint16_t>* p) {
+    void getKey(uint32_t target, std::pair<uint16_t, uint32_t>* p) {
         File file = SPIFFS.open("/auth_data.json", "r");
         StaticJsonDocument<1024> auth_data;
         std::string res;
@@ -25,7 +26,7 @@ protected:
         if(error) {Serial.println("error: "); Serial.println(error.f_str());} 
         for (JsonObject key_item : auth_data["keys"].as<JsonArray>()) {
             if(key_item["target"] == target) {
-                *p = std::make_pair((uint16_t)key_item["degree"], (uint16_t)key_item["module"]);
+                *p = std::make_pair((uint16_t)key_item["degree"], (uint32_t)key_item["module"]);
                 break;
             }
         }
@@ -62,11 +63,16 @@ public:
 
     boolean check(uint32_t target, std::string data, uint8_t repeat) {
         std::string key_with_gamma = this->addGammaThenHash(target, repeat);
-        if(key_with_gamma == data) {
-            this->update_timer(target);
-            return true;
+        if(!key_with_gamma.empty()) {
+            if(key_with_gamma == data) {
+                this->update_timer(target);
+                return true;
+            }
+            return false;
+        } else {
+            this->disable(target);
+            return false;
         }
-        return false;
     }
 
     boolean check_and_try_auth(uint32_t target, std::string data, uint8_t repeat) {
@@ -82,6 +88,9 @@ public:
         uint16_t key = generateUintPassword(millis());
         authKeys[target] = key;
         authTimers[target] = millis();
+        if(addGammaThenHash(target, 1).empty() || addGammaThenHash(target, 2).empty()) {
+            return genKeyAndStartAuth(target);
+        }
         return std::to_string(key);
     }
 
@@ -104,14 +113,18 @@ public:
     }
 
     std::string addGammaThenHash(uint32_t target, uint8_t repeat) {
-        std::pair<uint16_t, uint16_t> p;
+        std::pair<uint16_t, uint32_t> p;
         this->getKey(target, &p);
-        uint32_t aKey = authKeys[target];
+        uint64_t aKey = authKeys[target];
         for(int i = 0; i < repeat; i++) {
             aKey = ModularExp::mod_exp(aKey, p.first, p.second);
         }
-        std::string res = std::to_string(aKey).c_str();
-        return std::string(sha1(res.c_str(), res.length()).c_str());
+        if(aKey == 0) {
+            return "";
+        } else {
+            std::string res = std::to_string(aKey);
+            return MESH_SHA256::hashing(res);
+        }
     }
 
     void update() {

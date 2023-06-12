@@ -1,7 +1,7 @@
 #pragma once
 #include <Arduino.h>
 #include "rsa/RSA.h"
-#include "../utils/HexConverter.hpp"
+#include "mesh/utils/HexConverter.hpp"
 
 class RSAAdatper {
 protected:
@@ -48,6 +48,43 @@ protected:
     return str;
 }
 
+    void encrypt(char* msg) {
+        rsa_public_encrypt((uint8_t*)msg, RSA_BLOCK_SIZE, public_key, (uint8_t*)msg);
+    }
+
+    void encrypt(char* msg, char* res) {
+        rsa_public_encrypt((uint8_t*)msg, RSA_BLOCK_SIZE, public_key, (uint8_t*)res);
+    }
+
+    void encrypt(char* msg, char* res, uint8_t* pub_key ) {
+        rsa_public_encrypt((uint8_t*)msg, RSA_BLOCK_SIZE, pub_key, (uint8_t*)res);
+    }
+   
+    void decrypt(char* msg) {
+        rsa_private_decrypt((uint8_t*)msg, public_key, private_key, (uint8_t*)msg);
+    }
+
+    void decrypt(char* msg, char* res)  {
+        rsa_private_decrypt((uint8_t*)msg, public_key, private_key, (uint8_t*)res);
+    }
+
+    string encrypt(string msg, uint8_t* pub_key) {
+        msg = pad_data(msg, RSA_BLOCK_SIZE);
+        string res;
+        char c_buffer[RSA_SIZE];
+        for(int i = 0; i < msg.length(); i+= RSA_BLOCK_SIZE) {
+            string buffer = msg.substr(i, RSA_BLOCK_SIZE);
+            this->encrypt((char*)buffer.c_str(), c_buffer, pub_key);
+            res += HexConverter::toHex(c_buffer, sizeof(c_buffer));
+        }
+        return res;
+    }
+
+    string encrypt(string msg, string str_pub_key) {
+        HexConverter::hexToCharArr(str_pub_key.c_str(), (char*)tmp_pub_key);
+        return this->encrypt(msg, this->tmp_pub_key);
+    }
+
 public:
     RSAAdatper() {
         this->generate_keys();
@@ -69,18 +106,6 @@ public:
          return HexConverter::toHex((const char*)this->public_key, RSA_SIZE);
     }
 
-    string encrypt(string msg, uint8_t* pub_key) {
-        msg = pad_data(msg, RSA_BLOCK_SIZE);
-        string res;
-        char c_buffer[RSA_SIZE];
-        for(int i = 0; i < msg.length(); i+= RSA_BLOCK_SIZE) {
-            string buffer = msg.substr(i, RSA_BLOCK_SIZE);
-            this->encrypt((char*)buffer.c_str(), c_buffer, pub_key);
-            res += HexConverter::toHex(c_buffer, sizeof(c_buffer));
-        }
-        return res;
-    }
-
     string encrypt_for_target(string msg, uint32_t target) {
         string key = get_target_pub_key(target);
         if (!key.empty()) {
@@ -94,11 +119,6 @@ public:
         return this->encrypt(msg, this->public_key);
     }
 
-    string encrypt(string msg, string str_pub_key) {
-        HexConverter::hexToCharArr(str_pub_key.c_str(), (char*)tmp_pub_key);
-        return this->encrypt(msg, this->tmp_pub_key);
-    }
-
     string decrypt(string msg) {
         string res;
         char c_buffer[RSA_SIZE];
@@ -110,26 +130,6 @@ public:
         }
         res = trimString(res);
         return res;
-    }
-
-    void encrypt(char* msg) {
-        rsa_public_encrypt((uint8_t*)msg, RSA_BLOCK_SIZE, public_key, (uint8_t*)msg);
-    }
-
-    void encrypt(char* msg, char* res) {
-        rsa_public_encrypt((uint8_t*)msg, RSA_BLOCK_SIZE, public_key, (uint8_t*)res);
-    }
-
-    void encrypt(char* msg, char* res, uint8_t* pub_key ) {
-        rsa_public_encrypt((uint8_t*)msg, RSA_BLOCK_SIZE, pub_key, (uint8_t*)res);
-    }
-   
-    void decrypt(char* msg) {
-        rsa_private_decrypt((uint8_t*)msg, public_key, private_key, (uint8_t*)msg);
-    }
-
-    void decrypt(char* msg, char* res)  {
-        rsa_private_decrypt((uint8_t*)msg, public_key, private_key, (uint8_t*)res);
     }
     
 };

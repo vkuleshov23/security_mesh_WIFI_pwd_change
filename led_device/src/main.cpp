@@ -16,8 +16,8 @@ void setup() {
 void loop() {
     sec_mesh.update();
     if(t == 0) {
-        // sec_mesh.send(shared_ptr<IMeshCommand>(new PingCommand(MAIN_DEVICE)));
-        sec_mesh.send(shared_ptr<IMeshCommand>(new RSASerialCommand(MAIN_DEVICE, "BEST PRINT")));
+        sec_mesh.send(shared_ptr<IMeshCommand>(new PingCommand(MAIN_DEVICE)));
+        // sec_mesh.send(shared_ptr<IMeshCommand>(new RSASerialCommand(MAIN_DEVICE, "BEST PRINT")));
         t.start(30000);
     }
 }

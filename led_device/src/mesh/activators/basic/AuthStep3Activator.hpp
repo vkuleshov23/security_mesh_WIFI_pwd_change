@@ -6,6 +6,7 @@
 #include "mesh/security/auth/AuthHandler.hpp"
 #include "mesh/commands/basic/AuthStep4Command.hpp"
 #include "mesh/commands/basic/AuthErrorCommand.hpp"
+#include "mesh/security/MESH_SHA256.hpp"
 #include <string>
 #include <Arduino.h>
 #include <memory>
@@ -17,8 +18,8 @@ protected:
 
     std::string getHash(uint32_t target, std::string pub_key) {
         std::string hash2 = this->auth->addGammaThenHash(target, 2);
-        std::string payload = hash2 + sha1(pub_key.c_str(), pub_key.length()).c_str();
-        std::string hash_payload = sha1(payload.c_str(), payload.length()).c_str();
+        std::string payload = hash2 + MESH_SHA256::hashing(pub_key);
+        std::string hash_payload = MESH_SHA256::hashing(payload);
         // std::string hash3 = this->auth->addGammaThenHash(target, 3);
         return hash_payload;
     }

@@ -16,6 +16,7 @@
 #include "mesh/activators/basic/AuthStep3Activator.hpp"
 #include "mesh/activators/basic/AuthStep4Activator.hpp"
 #include "mesh/activators/basic/AuthStep5Activator.hpp"
+#include "mesh/activators/basic/SendPasswordActivator.hpp"
 #include "mesh/activators/test/RSASerialActivator.hpp"
 #include "mesh/activators/test/RSASerialAnswerActivator.hpp"
 #include "mesh/security/ECCAdapter.hpp"
@@ -49,6 +50,7 @@ private:
         this->setActivator(shared_ptr<IMeshActivator>(new AuthErrorActivator(auth)));
         this->setActivator(shared_ptr<IMeshActivator>(new RSASeraialActivator(rsa)));
         this->setActivator(shared_ptr<IMeshActivator>(new RSASerialAnswerActivator(rsa)));
+        this->setActivator(shared_ptr<IMeshActivator>(new SendPasswordActivator(rsa, auth)));
     }
 
 public:

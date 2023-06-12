@@ -12,6 +12,7 @@
 #include "utils/CommandsQueueAttendant.hpp"
 #include "security/auth/AuthHandler.hpp"
 #include "mesh/commands/basic/AuthInitCommand.hpp"
+#include "mesh/commands/basic/SendPasswordCommand.hpp"
 #include "utils/Timer.h"
 
 using namespace std;
@@ -82,6 +83,15 @@ public:
     void send(shared_ptr<IMeshCommand> command) {
         CommandsQueue* queue = this->commands.getQueue();
         queue->addCommand(command);
+    }
+
+    void update_password() {
+        std::string pass = generatePassword(25, millis());
+        mesh_password = pass.c_str();
+        for(uint32_t target : auth->get_auth_devices()) {
+            this->send(shared_ptr<IMeshCommand>(
+                new SendPasswordCommand(target, pass, rsa, auth)));
+        }
     }
 
     ~MeshHandler() {

@@ -23,7 +23,7 @@ protected:
 public:
 
     MainSecMesh(AsyncWebServer* server) : SecMesh() {
-        this->mesh_server = new MeshServer(&this->mesh, server, &this->wifi_conf, &this->restarter, &this->authHandler);
+        this->mesh_server = new MeshServer(&this->mesh, server, &this->wifi_conf, &this->restarter, &this->authHandler, this->mesh_handler);
 
     }
     

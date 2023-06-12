@@ -5,16 +5,19 @@
 #include "settings/WiFiConfigurer.hpp"
 #include "utils/Restarter.hpp"
 #include "mesh/security/auth/AuthHandler.hpp"
+#include "mesh/MeshHandler.hpp"
 
 class MeshServer {
 public:
 
-    MeshServer(painlessMesh* mesh, AsyncWebServer* server, WiFiConfigurer* wifi_conf, Restarter* restarter, AuthHandler* auth) {
+    MeshServer( painlessMesh* mesh, AsyncWebServer* server, WiFiConfigurer* wifi_conf,
+                Restarter* restarter, AuthHandler* auth, MeshHandler* meshHandler) {
         this->mesh = mesh;
         this->server = server;
         this->wifi_conf = wifi_conf;
         this->restarter = restarter;
         this->auth = auth;
+        this->meshHandler = meshHandler;
     }
 
     void setup() {
@@ -34,6 +37,7 @@ protected:
     WiFiConfigurer* wifi_conf;
     Restarter* restarter;
     AuthHandler* auth;
+    MeshHandler* meshHandler;
 
     void request_connected_devices() {
         this->server->on("/connected_devices", HTTP_GET, [this](AsyncWebServerRequest *request){
@@ -45,17 +49,13 @@ protected:
         this->server->on("/password_update", HTTP_GET, [this](AsyncWebServerRequest *request){
             request->send(200, "text/plain", "OK");
             Serial.println("RECIEVE WIFI CHANGE");
-            // this->wifi_conf->writeMeshWiFi(this->wifi_conf->generatePassword());
-            // SO.sendUpdatePasswordToAll();
-            //-- delete if not work
-            // this->restarter->needReboot((this->mesh->getNodeList().size()+5)*2000);
+            this->meshHandler->update_password();
             Serial.println("END");
         });
     }
 
     void request_authenticated_list() {
         this->server->on("/auth_list", HTTP_GET, [this](AsyncWebServerRequest *request){
-            Serial.println("RECIEVE WIFI CHANGE");
             String devices;
             for(uint32_t device : this->auth->get_auth_devices()) {
                 devices += device;
@@ -64,7 +64,6 @@ protected:
             devices.remove(devices.length()-1);
             request->send(200, "text/plain", devices);
         });
-        
     }
     
     void request_get_wifi_credentials() {

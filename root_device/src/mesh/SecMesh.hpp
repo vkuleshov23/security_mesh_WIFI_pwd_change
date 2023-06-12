@@ -93,6 +93,8 @@ public:
             new IMeshCommand(com_name, target, this->rsa.encrypt_for_target(data, target))));
     }
 
+    
+
     void crypt_speed_test(std::string data) {
         Serial.print("data: ");
         Serial.println(data.c_str());

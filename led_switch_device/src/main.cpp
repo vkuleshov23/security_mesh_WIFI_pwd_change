@@ -1,25 +1,26 @@
 #include <ESPAsyncWebServer.h>
+#include <Arduino.h>
 #include <LittleFS.h>
-#include "painlessMesh.h"
 #include "mesh/SecMesh.hpp"
 #include "mesh/commands/basic/PingCommand.hpp"
+#include "mesh/commands/test/RSASerialCommand.hpp"
 
-painlessMesh mesh;
-SecMesh sec_mesh(&mesh);
+SecMesh sec_mesh;
 Timer t;
 
 void setup() {
     Serial.begin(115200);
+    delay(1000);
     sec_mesh.setup();
 }
 
-int i = 1;
+
 
 void loop() {
     sec_mesh.update();
-    if(t == 0) {
-        PingCommand command(3665705184);
-        sec_mesh.send(&command);
-        t.start(15000);
+    if(t == 0) { 
+        // sec_mesh.send(shared_ptr<IMeshCommand>(new PingCommand(MAIN_DEVICE)));
+        // sec_mesh.send(shared_ptr<IMeshCommand>(new RSASerialCommand(MAIN_DEVICE, "KEK RSA PRINT")));
+        t.start(10000);
     }
 }

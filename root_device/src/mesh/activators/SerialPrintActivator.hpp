@@ -4,17 +4,16 @@
 #include "../settings/CommandNames.hpp"
 #include <string>
 #include <Arduino.h>
+#include <memory>
 
-using namespace std;
 
 class SerialPrintActivator : public IMeshActivator {
 protected:
 
 public:
-    SerialPrintActivator() 
-    : IMeshActivator(PRINT) {}
+    SerialPrintActivator() : IMeshActivator(PRINT) {}
 
-    void process(IMeshCommand* command) override {
+    void process(std::shared_ptr<IMeshCommand> command) override {
         // this->setParam(command->get_data());
         Serial.println(command->get_data().c_str());
     }

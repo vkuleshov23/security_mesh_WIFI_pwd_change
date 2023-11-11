@@ -4,19 +4,19 @@
 #include "../../settings/CommandNames.hpp"
 #include <string>
 #include <Arduino.h>
+#include <memory>
 
-using namespace std;
 
 class PingAnswerActivator : public IMeshActivator {
 protected:
 
 public:
-    PingAnswerActivator() 
-    : IMeshActivator(PING_ANSWER) {}
+    PingAnswerActivator() : IMeshActivator(PING_ANSWER) {}
 
-    void process(IMeshCommand* command) override {
+    void process(std::shared_ptr<IMeshCommand> command) override {
         Serial.print("ping delay: ");
         Serial.print(millis() - std::stol(command->get_data()));
+        Serial.print(" millisecs");
         Serial.print(" | from: ");
         Serial.println(command->get_transmitter());
     }
